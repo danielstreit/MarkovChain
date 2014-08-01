@@ -37,7 +37,7 @@ describe('the constructor', function() {
   });
 
   it('should call add on its arguments', function() {
-    chain = new MarkovChain(1, 1, 1, 'a');
+    chain = new MarkovChain([1, 1, 1, 'a']);
     expect(chain._data.length).to.equal(4);
   });
 
@@ -74,57 +74,8 @@ describe('add should add inputs to _data and _table', function() {
 
   });
 
-  it('should accept an arbitrary number primative data inputs', function() {
-    chain.add(1, 1, 'a', 'a', 1, 1, 1);
-    expect(chain._data[3]).to.equal('a');
-    expect(chain._data[4]).to.equal(1);
-    expect(chain._data[5]).to.equal(1);
-    expect(chain._data[6]).to.equal(1);
-    expect(chain._table[1][1]).to.equal(3);
-    expect(chain._table[1]['a']).to.equal(1);
-    expect(chain._table['a']['a']).to.equal(1);
-    expect(chain._table['a'][1]).to.equal(1);
-  });
-
   it('should accept an array of data', function() {
     chain.add([1, 1, 'a', 'a', 1, 1, 1]);
-    expect(chain._data[3]).to.equal('a');
-    expect(chain._data[4]).to.equal(1);
-    expect(chain._data[5]).to.equal(1);
-    expect(chain._data[6]).to.equal(1);
-    expect(chain._table[1][1]).to.equal(3);
-    expect(chain._table[1]['a']).to.equal(1);
-    expect(chain._table['a']['a']).to.equal(1);
-    expect(chain._table['a'][1]).to.equal(1);
-  });
-
-  it('should accept an arbitrary number arrays', function() {
-    chain.add([1, 1], ['a', 'a'], [1, 1, 1]);
-    expect(chain._data[3]).to.equal('a');
-    expect(chain._data[4]).to.equal(1);
-    expect(chain._data[5]).to.equal(1);
-    expect(chain._data[6]).to.equal(1);
-    expect(chain._table[1][1]).to.equal(3);
-    expect(chain._table[1]['a']).to.equal(1);
-    expect(chain._table['a']['a']).to.equal(1);
-    expect(chain._table['a'][1]).to.equal(1);
-  });
-
-  it('should ignore objects, function, undefined, null, and NaN', function() {
-    var fun = function() {};
-    chain.add([1, null, 1, {}, 'a', 'a', 1, undefined, fun, 1, NaN, 1]);
-    expect(chain._data[3]).to.equal('a');
-    expect(chain._data[4]).to.equal(1);
-    expect(chain._data[5]).to.equal(1);
-    expect(chain._data[6]).to.equal(1);
-    expect(chain._table[1][1]).to.equal(3);
-    expect(chain._table[1]['a']).to.equal(1);
-    expect(chain._table['a']['a']).to.equal(1);
-    expect(chain._table['a'][1]).to.equal(1);
-  });
-
-  it('should flatten nested arrays', function() {
-    chain.add([1, [1, 'a'], [['a']], 1, [1, 1]]);
     expect(chain._data[3]).to.equal('a');
     expect(chain._data[4]).to.equal(1);
     expect(chain._data[5]).to.equal(1);
@@ -156,9 +107,9 @@ describe('get should return processed data from _table', function() {
   });
 
   it('should return the entire probability table (as an object) if no arguments are given', function() {
-    expect(chain.get()[a][b]).to.equal(0.3);
-    expect(chain.get()[a][a]).to.equal(0.7);
-    expect(chain.get()[b][a]).to.equal(0.2);
-    expect(chain.get()[b][b]).to.equal(0.8);
+    expect(chain.get().a.a).to.equal(0.7);
+    expect(chain.get().b.a).to.equal(0.2);
+    expect(chain.get().b.b).to.equal(0.8);
+    expect(chain.get().a.b).to.equal(0.3);
   });
 });
