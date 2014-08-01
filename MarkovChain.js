@@ -35,25 +35,27 @@ MarkovChain.prototype.add = function(data) {
 MarkovChain.prototype.get = function(currentState, nextState) {
   var result = {};
   var count = 0;
+
   if (currentState === undefined) {
     for (var key in this._table) {
       result[key] = this.get(key);
     }
     return result;
-  } else if (nextState === undefined) {
-    for (var key in this._table[currentState]) {
-      count += this._table[currentState][key];
-    }
-    for (var key in this._table[currentState]) {
-      result[key] = this._table[currentState][key] / count;
-    }
-    return result;
-  } else {
-    for (var key in this._table[currentState]) {
-      count += this._table[currentState][key];
-    }
-    return this._table[currentState][nextState] / count;
   }
+
+  var current = this._table[currentState];
+  for (var key in current) {
+    count += current[key];
+  }
+
+  if (current.hasOwnProperty(nextState)) {
+    return current[nextState] / count;
+  }
+
+  for (var key in current) {
+    result[key] = current[key] / count;
+  }
+  return result;
 };
 
 MarkovChain.prototype._addOne = function(data) {
