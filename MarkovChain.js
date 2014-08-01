@@ -15,7 +15,7 @@ var MarkovChain = function (data) {
 // the chain.
 MarkovChain.prototype.add = function(data) {
   if (data === undefined) {
-    return;
+    return -1;
   }
   if (Array.isArray(data)) {
     for (var i = 0; i < data.length; i++) {
@@ -24,6 +24,7 @@ MarkovChain.prototype.add = function(data) {
   } else {
     this._addOne(data);
   }
+  return this._data.length;
 };
 
 // If only current state is passed, returns an object of possible next
@@ -34,27 +35,27 @@ MarkovChain.prototype.add = function(data) {
 // represented as a javascript object.
 MarkovChain.prototype.get = function(currentState, nextState) {
   var result = {};
-  var count = 0;
 
-  if (currentState === undefined) {
+  if (this._table.hasOwnProperty(currentState)) {
+    var current = this._table[currentState];
+    if (current.hasOwnProperty(nextState)) {
+      return current[nextState] / current._count;
+    } else if (nextState !== undefined) {
+      // Given nextState not yet seen after current state
+      return 0;
+    }
+    for (var key in current) {
+      result[key] = this.get(currentState, key);
+    }
+  } else if (currentState !== undefined) {
+    // Given current state not seen yet
+    return 0;
+  } else {
     for (var key in this._table) {
       result[key] = this.get(key);
     }
-    return result;
   }
 
-  var current = this._table[currentState];
-  for (var key in current) {
-    count += current[key];
-  }
-
-  if (current.hasOwnProperty(nextState)) {
-    return current[nextState] / count;
-  }
-
-  for (var key in current) {
-    result[key] = current[key] / count;
-  }
   return result;
 };
 
@@ -64,11 +65,19 @@ MarkovChain.prototype._addOne = function(data) {
   if (this._table.hasOwnProperty(prev)) {
     if (this._table[prev].hasOwnProperty(data)) {
       this._table[prev][data] += 1;
+      this._table[prev]._count += 1;
     } else {
       this._table[prev][data] = 1;
+      this._table[prev]._count += 1
     }
   } else if (i >= 0) {
     this._table[prev] = {};
     this._table[prev][data] = 1;
+    Object.defineProperty(this._table[prev], '_count', {
+      value: 1,
+      enumerable: false,
+      writable: true,
+      configurable: false
+    });
   }
 }
