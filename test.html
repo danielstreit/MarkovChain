@@ -9,7 +9,9 @@
 <body>
   <div id="mocha"></div>
   <script src="bower_components/mocha/mocha.js"></script>
-  <script>mocha.setup('')</script>
+  <script>
+    mocha.setup('bdd')
+  </script>
   <script src="bower_components/chai/chai.js"></script>
   <script>
     var assert = chai.assert;
@@ -18,10 +20,10 @@
   </script>
 
   <!-- include source files here... -->
-  <script src="markovChain.js"></script>
+  <script src="MarkovChain.js"></script>
 
   <!-- include spec files here... -->
-  <script src="spec/markovChain.js"></script>
+  <script src="spec/MarkovChain.js"></script>
 
   <script>mocha.run()</script>
 </body>
