@@ -63,17 +63,19 @@ MarkovChain.prototype._addOne = function(data) {
   var i = this._data.push(data) - 2;
   var prev = this._data[i];
   if (this._table.hasOwnProperty(prev)) {
-    if (this._table[prev].hasOwnProperty(data)) {
-      this._table[prev][data] += 1;
-      this._table[prev]._count += 1;
+    prev = this._table[prev];
+    if (prev.hasOwnProperty(data)) {
+      prev[data]++;
+      prev._count++;
     } else {
-      this._table[prev][data] = 1;
-      this._table[prev]._count += 1
+      prev[data] = 1;
+      prev._count++;
     }
   } else if (i >= 0) {
     this._table[prev] = {};
-    this._table[prev][data] = 1;
-    Object.defineProperty(this._table[prev], '_count', {
+    prev = this._table[prev];
+    prev[data] = 1;
+    Object.defineProperty(prev, '_count', {
       value: 1,
       enumerable: false,
       writable: true,
