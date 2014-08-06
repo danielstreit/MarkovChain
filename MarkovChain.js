@@ -35,9 +35,9 @@ MarkovChain.prototype.add = function(data) {
 // represented as a javascript object.
 MarkovChain.prototype.get = function(currentState, nextState) {
   var result = {};
+  var current = this._table[currentState];
 
-  if (this._table.hasOwnProperty(currentState)) {
-    var current = this._table[currentState];
+  if (current) {
     if (current.hasOwnProperty(nextState)) {
       return current[nextState] / current._count;
     } else if (nextState !== undefined) {
@@ -59,6 +59,7 @@ MarkovChain.prototype.get = function(currentState, nextState) {
   return result;
 };
 
+// Internal helper function for adding data one element at a time
 MarkovChain.prototype._addOne = function(data) {
   var i = this._data.push(data) - 2;
   var prev = this._data[i];
