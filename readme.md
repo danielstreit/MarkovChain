@@ -4,31 +4,33 @@ This library is an implementation of an observable markov chain.
 
 
 ###How to Use
+####Constructor
 
 ```
 var myMarkovChain = new MarkovChain();
 ```
 The constructor creates a new MarkovChain Object. It can take a data point or an array of data points as an argument.
 
-
+####Add Data
 ```
 myMarkovChain.add(data);
 ```
 Adds the given data to the MarkovChain. Data can be a single data point of an array of data points.
 
 
+####Get Data
 ```
 myMarkovChain.get(currentState, nextState);
 ```
 Returns the observed probability (number) of the next state given the current state.
+
 
 ```
 myMarkovChain.get(currentState);
 ```
 Returns an Object with the observed next states as keys and their associated observed probabilities as values.
 
-/Returns the entire conditional probability table as an object. 
-// Each key is a possible current state and each value is an object representing the possible next states and their associated probabilities
+
 ```
 myMarkovChain.get();
 ```
